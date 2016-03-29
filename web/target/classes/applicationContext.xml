@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans   
+    http://www.springframework.org/schema/beans/spring-beans-4.0.xsd   
+    http://www.springframework.org/schema/tx   
+    http://www.springframework.org/schema/tx/spring-tx-4.0.xsd   
+    http://www.springframework.org/schema/aop    
+    http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+    http://www.springframework.org/schema/context   
+    http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+	<bean
+		class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor " />
+	<context:annotation-config />
+	<!-- 配置数据源 -->
+	<bean id="jdbcDataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName">
+			<value>com.mysql.jdbc.Driver</value>
+		</property>
+		<property name="url">
+			<value>jdbc:mysql://localhost:3306/mybatis?useUnicode=true&amp;characterEncoding=UTF-8
+			</value>
+		</property>
+		<property name="username">
+			<value>root</value>
+		</property>
+		<property name="password">
+			<value>toor</value>
+		</property>
+	</bean>
+
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="jdbcDataSource" />
+		<property name="mapperLocations"
+			value="classpath:com/abstracttools/web/mapping/*.xml"></property>
+	</bean>
+
+	<!-- 自动注册bean beanID为第一个字母小写类名 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.abstracttools.web.dao" />
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+	</bean>
+
+	<!-- (事务管理)transaction manager, use JtaTransactionManager for global tx -->
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="jdbcDataSource" />
+	</bean>
+</beans>
