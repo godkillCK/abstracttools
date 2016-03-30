@@ -1,6 +1,6 @@
-package com.abstracttools.web.dao;
+package com.abstracttools.web.db.mapper;
 
-import com.abstracttools.web.model.User;
+import com.abstracttools.web.db.model.User;
 
 public interface UserMapper {
     int deleteByPrimaryKey(Integer id);

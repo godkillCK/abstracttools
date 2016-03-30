@@ -6,17 +6,23 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
 
-import com.abstracttools.web.dao.UserMapper;
+import com.abstracttools.web.bo.AccountBO;
+import com.abstracttools.web.db.model.Account;
 
-@Path("/hello")
+@Controller
+@Scope("prototype")
+@Path("hello")
 public class HelloResource {
-    @Autowired()
-    UserMapper userMapper;
+    @Autowired
+    private AccountBO accountBO;
     
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public String sayHello() {
-        return userMapper.selectByPrimaryKey(1).getName();
+        Account account = accountBO.getAccount(154);
+        return account.getEmail();
     }
 }

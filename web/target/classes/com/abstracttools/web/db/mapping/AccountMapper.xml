@@ -1,0 +1,482 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.abstracttools.web.db.mapper.AccountMapper" >
+  <resultMap id="BaseResultMap" type="com.abstracttools.web.db.model.Account" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="loginPwd" property="loginpwd" jdbcType="VARCHAR" />
+    <result column="signPwd" property="signpwd" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="authProject" property="authproject" jdbcType="VARCHAR" />
+    <result column="projRNLevel" property="projrnlevel" jdbcType="INTEGER" />
+    <result column="createDate" property="createdate" jdbcType="TIMESTAMP" />
+    <result column="modifyDate" property="modifydate" jdbcType="TIMESTAMP" />
+    <result column="personId" property="personid" jdbcType="INTEGER" />
+    <result column="organizeId" property="organizeid" jdbcType="INTEGER" />
+    <result column="pwdRequest" property="pwdrequest" jdbcType="VARCHAR" />
+    <result column="pwdAnswer" property="pwdanswer" jdbcType="VARCHAR" />
+    <result column="balance" property="balance" jdbcType="DOUBLE" />
+    <result column="rate" property="rate" jdbcType="DOUBLE" />
+    <result column="overBalance" property="overbalance" jdbcType="INTEGER" />
+    <result column="alipayId" property="alipayid" jdbcType="VARCHAR" />
+    <result column="payCoin" property="paycoin" jdbcType="DOUBLE" />
+    <result column="rejReason" property="rejreason" jdbcType="VARCHAR" />
+    <result column="checkPrice" property="checkprice" jdbcType="DOUBLE" />
+    <result column="bankAccount" property="bankaccount" jdbcType="VARCHAR" />
+    <result column="bankNum" property="banknum" jdbcType="VARCHAR" />
+    <result column="bank" property="bank" jdbcType="VARCHAR" />
+    <result column="head" property="head" jdbcType="VARCHAR" />
+    <result column="alertset" property="alertset" jdbcType="VARCHAR" />
+    <result column="pwdRequest2" property="pwdrequest2" jdbcType="VARCHAR" />
+    <result column="pwdAnswer2" property="pwdanswer2" jdbcType="VARCHAR" />
+    <result column="accountUid" property="accountuid" jdbcType="VARCHAR" />
+    <result column="checktimes" property="checktimes" jdbcType="INTEGER" />
+    <result column="authority" property="authority" jdbcType="INTEGER" />
+    <result column="totalUpload" property="totalupload" jdbcType="DOUBLE" />
+    <result column="version" property="version" jdbcType="INTEGER" />
+    <result column="year" property="year" jdbcType="INTEGER" />
+    <result column="month" property="month" jdbcType="INTEGER" />
+    <result column="day" property="day" jdbcType="INTEGER" />
+    <result column="week" property="week" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, email, mobile, loginPwd, signPwd, type, status, authProject, projRNLevel, createDate, 
+    modifyDate, personId, organizeId, pwdRequest, pwdAnswer, balance, rate, overBalance, 
+    alipayId, payCoin, rejReason, checkPrice, bankAccount, bankNum, bank, head, alertset, 
+    pwdRequest2, pwdAnswer2, accountUid, checktimes, authority, totalUpload, version, 
+    year, month, day, week
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from account
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from account
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.abstracttools.web.db.model.Account" >
+    insert into account (id, email, mobile, 
+      loginPwd, signPwd, type, 
+      status, authProject, projRNLevel, 
+      createDate, modifyDate, personId, 
+      organizeId, pwdRequest, pwdAnswer, 
+      balance, rate, overBalance, 
+      alipayId, payCoin, rejReason, 
+      checkPrice, bankAccount, bankNum, 
+      bank, head, alertset, 
+      pwdRequest2, pwdAnswer2, accountUid, 
+      checktimes, authority, totalUpload, 
+      version, year, month, 
+      day, week)
+    values (#{id,jdbcType=INTEGER}, #{email,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, 
+      #{loginpwd,jdbcType=VARCHAR}, #{signpwd,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, 
+      #{status,jdbcType=INTEGER}, #{authproject,jdbcType=VARCHAR}, #{projrnlevel,jdbcType=INTEGER}, 
+      #{createdate,jdbcType=TIMESTAMP}, #{modifydate,jdbcType=TIMESTAMP}, #{personid,jdbcType=INTEGER}, 
+      #{organizeid,jdbcType=INTEGER}, #{pwdrequest,jdbcType=VARCHAR}, #{pwdanswer,jdbcType=VARCHAR}, 
+      #{balance,jdbcType=DOUBLE}, #{rate,jdbcType=DOUBLE}, #{overbalance,jdbcType=INTEGER}, 
+      #{alipayid,jdbcType=VARCHAR}, #{paycoin,jdbcType=DOUBLE}, #{rejreason,jdbcType=VARCHAR}, 
+      #{checkprice,jdbcType=DOUBLE}, #{bankaccount,jdbcType=VARCHAR}, #{banknum,jdbcType=VARCHAR}, 
+      #{bank,jdbcType=VARCHAR}, #{head,jdbcType=VARCHAR}, #{alertset,jdbcType=VARCHAR}, 
+      #{pwdrequest2,jdbcType=VARCHAR}, #{pwdanswer2,jdbcType=VARCHAR}, #{accountuid,jdbcType=VARCHAR}, 
+      #{checktimes,jdbcType=INTEGER}, #{authority,jdbcType=INTEGER}, #{totalupload,jdbcType=DOUBLE}, 
+      #{version,jdbcType=INTEGER}, #{year,jdbcType=INTEGER}, #{month,jdbcType=INTEGER}, 
+      #{day,jdbcType=INTEGER}, #{week,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.abstracttools.web.db.model.Account" >
+    insert into account
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="mobile != null" >
+        mobile,
+      </if>
+      <if test="loginpwd != null" >
+        loginPwd,
+      </if>
+      <if test="signpwd != null" >
+        signPwd,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="authproject != null" >
+        authProject,
+      </if>
+      <if test="projrnlevel != null" >
+        projRNLevel,
+      </if>
+      <if test="createdate != null" >
+        createDate,
+      </if>
+      <if test="modifydate != null" >
+        modifyDate,
+      </if>
+      <if test="personid != null" >
+        personId,
+      </if>
+      <if test="organizeid != null" >
+        organizeId,
+      </if>
+      <if test="pwdrequest != null" >
+        pwdRequest,
+      </if>
+      <if test="pwdanswer != null" >
+        pwdAnswer,
+      </if>
+      <if test="balance != null" >
+        balance,
+      </if>
+      <if test="rate != null" >
+        rate,
+      </if>
+      <if test="overbalance != null" >
+        overBalance,
+      </if>
+      <if test="alipayid != null" >
+        alipayId,
+      </if>
+      <if test="paycoin != null" >
+        payCoin,
+      </if>
+      <if test="rejreason != null" >
+        rejReason,
+      </if>
+      <if test="checkprice != null" >
+        checkPrice,
+      </if>
+      <if test="bankaccount != null" >
+        bankAccount,
+      </if>
+      <if test="banknum != null" >
+        bankNum,
+      </if>
+      <if test="bank != null" >
+        bank,
+      </if>
+      <if test="head != null" >
+        head,
+      </if>
+      <if test="alertset != null" >
+        alertset,
+      </if>
+      <if test="pwdrequest2 != null" >
+        pwdRequest2,
+      </if>
+      <if test="pwdanswer2 != null" >
+        pwdAnswer2,
+      </if>
+      <if test="accountuid != null" >
+        accountUid,
+      </if>
+      <if test="checktimes != null" >
+        checktimes,
+      </if>
+      <if test="authority != null" >
+        authority,
+      </if>
+      <if test="totalupload != null" >
+        totalUpload,
+      </if>
+      <if test="version != null" >
+        version,
+      </if>
+      <if test="year != null" >
+        year,
+      </if>
+      <if test="month != null" >
+        month,
+      </if>
+      <if test="day != null" >
+        day,
+      </if>
+      <if test="week != null" >
+        week,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="loginpwd != null" >
+        #{loginpwd,jdbcType=VARCHAR},
+      </if>
+      <if test="signpwd != null" >
+        #{signpwd,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="authproject != null" >
+        #{authproject,jdbcType=VARCHAR},
+      </if>
+      <if test="projrnlevel != null" >
+        #{projrnlevel,jdbcType=INTEGER},
+      </if>
+      <if test="createdate != null" >
+        #{createdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifydate != null" >
+        #{modifydate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="personid != null" >
+        #{personid,jdbcType=INTEGER},
+      </if>
+      <if test="organizeid != null" >
+        #{organizeid,jdbcType=INTEGER},
+      </if>
+      <if test="pwdrequest != null" >
+        #{pwdrequest,jdbcType=VARCHAR},
+      </if>
+      <if test="pwdanswer != null" >
+        #{pwdanswer,jdbcType=VARCHAR},
+      </if>
+      <if test="balance != null" >
+        #{balance,jdbcType=DOUBLE},
+      </if>
+      <if test="rate != null" >
+        #{rate,jdbcType=DOUBLE},
+      </if>
+      <if test="overbalance != null" >
+        #{overbalance,jdbcType=INTEGER},
+      </if>
+      <if test="alipayid != null" >
+        #{alipayid,jdbcType=VARCHAR},
+      </if>
+      <if test="paycoin != null" >
+        #{paycoin,jdbcType=DOUBLE},
+      </if>
+      <if test="rejreason != null" >
+        #{rejreason,jdbcType=VARCHAR},
+      </if>
+      <if test="checkprice != null" >
+        #{checkprice,jdbcType=DOUBLE},
+      </if>
+      <if test="bankaccount != null" >
+        #{bankaccount,jdbcType=VARCHAR},
+      </if>
+      <if test="banknum != null" >
+        #{banknum,jdbcType=VARCHAR},
+      </if>
+      <if test="bank != null" >
+        #{bank,jdbcType=VARCHAR},
+      </if>
+      <if test="head != null" >
+        #{head,jdbcType=VARCHAR},
+      </if>
+      <if test="alertset != null" >
+        #{alertset,jdbcType=VARCHAR},
+      </if>
+      <if test="pwdrequest2 != null" >
+        #{pwdrequest2,jdbcType=VARCHAR},
+      </if>
+      <if test="pwdanswer2 != null" >
+        #{pwdanswer2,jdbcType=VARCHAR},
+      </if>
+      <if test="accountuid != null" >
+        #{accountuid,jdbcType=VARCHAR},
+      </if>
+      <if test="checktimes != null" >
+        #{checktimes,jdbcType=INTEGER},
+      </if>
+      <if test="authority != null" >
+        #{authority,jdbcType=INTEGER},
+      </if>
+      <if test="totalupload != null" >
+        #{totalupload,jdbcType=DOUBLE},
+      </if>
+      <if test="version != null" >
+        #{version,jdbcType=INTEGER},
+      </if>
+      <if test="year != null" >
+        #{year,jdbcType=INTEGER},
+      </if>
+      <if test="month != null" >
+        #{month,jdbcType=INTEGER},
+      </if>
+      <if test="day != null" >
+        #{day,jdbcType=INTEGER},
+      </if>
+      <if test="week != null" >
+        #{week,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.abstracttools.web.db.model.Account" >
+    update account
+    <set >
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        mobile = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="loginpwd != null" >
+        loginPwd = #{loginpwd,jdbcType=VARCHAR},
+      </if>
+      <if test="signpwd != null" >
+        signPwd = #{signpwd,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="authproject != null" >
+        authProject = #{authproject,jdbcType=VARCHAR},
+      </if>
+      <if test="projrnlevel != null" >
+        projRNLevel = #{projrnlevel,jdbcType=INTEGER},
+      </if>
+      <if test="createdate != null" >
+        createDate = #{createdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifydate != null" >
+        modifyDate = #{modifydate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="personid != null" >
+        personId = #{personid,jdbcType=INTEGER},
+      </if>
+      <if test="organizeid != null" >
+        organizeId = #{organizeid,jdbcType=INTEGER},
+      </if>
+      <if test="pwdrequest != null" >
+        pwdRequest = #{pwdrequest,jdbcType=VARCHAR},
+      </if>
+      <if test="pwdanswer != null" >
+        pwdAnswer = #{pwdanswer,jdbcType=VARCHAR},
+      </if>
+      <if test="balance != null" >
+        balance = #{balance,jdbcType=DOUBLE},
+      </if>
+      <if test="rate != null" >
+        rate = #{rate,jdbcType=DOUBLE},
+      </if>
+      <if test="overbalance != null" >
+        overBalance = #{overbalance,jdbcType=INTEGER},
+      </if>
+      <if test="alipayid != null" >
+        alipayId = #{alipayid,jdbcType=VARCHAR},
+      </if>
+      <if test="paycoin != null" >
+        payCoin = #{paycoin,jdbcType=DOUBLE},
+      </if>
+      <if test="rejreason != null" >
+        rejReason = #{rejreason,jdbcType=VARCHAR},
+      </if>
+      <if test="checkprice != null" >
+        checkPrice = #{checkprice,jdbcType=DOUBLE},
+      </if>
+      <if test="bankaccount != null" >
+        bankAccount = #{bankaccount,jdbcType=VARCHAR},
+      </if>
+      <if test="banknum != null" >
+        bankNum = #{banknum,jdbcType=VARCHAR},
+      </if>
+      <if test="bank != null" >
+        bank = #{bank,jdbcType=VARCHAR},
+      </if>
+      <if test="head != null" >
+        head = #{head,jdbcType=VARCHAR},
+      </if>
+      <if test="alertset != null" >
+        alertset = #{alertset,jdbcType=VARCHAR},
+      </if>
+      <if test="pwdrequest2 != null" >
+        pwdRequest2 = #{pwdrequest2,jdbcType=VARCHAR},
+      </if>
+      <if test="pwdanswer2 != null" >
+        pwdAnswer2 = #{pwdanswer2,jdbcType=VARCHAR},
+      </if>
+      <if test="accountuid != null" >
+        accountUid = #{accountuid,jdbcType=VARCHAR},
+      </if>
+      <if test="checktimes != null" >
+        checktimes = #{checktimes,jdbcType=INTEGER},
+      </if>
+      <if test="authority != null" >
+        authority = #{authority,jdbcType=INTEGER},
+      </if>
+      <if test="totalupload != null" >
+        totalUpload = #{totalupload,jdbcType=DOUBLE},
+      </if>
+      <if test="version != null" >
+        version = #{version,jdbcType=INTEGER},
+      </if>
+      <if test="year != null" >
+        year = #{year,jdbcType=INTEGER},
+      </if>
+      <if test="month != null" >
+        month = #{month,jdbcType=INTEGER},
+      </if>
+      <if test="day != null" >
+        day = #{day,jdbcType=INTEGER},
+      </if>
+      <if test="week != null" >
+        week = #{week,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.abstracttools.web.db.model.Account" >
+    update account
+    set email = #{email,jdbcType=VARCHAR},
+      mobile = #{mobile,jdbcType=VARCHAR},
+      loginPwd = #{loginpwd,jdbcType=VARCHAR},
+      signPwd = #{signpwd,jdbcType=VARCHAR},
+      type = #{type,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      authProject = #{authproject,jdbcType=VARCHAR},
+      projRNLevel = #{projrnlevel,jdbcType=INTEGER},
+      createDate = #{createdate,jdbcType=TIMESTAMP},
+      modifyDate = #{modifydate,jdbcType=TIMESTAMP},
+      personId = #{personid,jdbcType=INTEGER},
+      organizeId = #{organizeid,jdbcType=INTEGER},
+      pwdRequest = #{pwdrequest,jdbcType=VARCHAR},
+      pwdAnswer = #{pwdanswer,jdbcType=VARCHAR},
+      balance = #{balance,jdbcType=DOUBLE},
+      rate = #{rate,jdbcType=DOUBLE},
+      overBalance = #{overbalance,jdbcType=INTEGER},
+      alipayId = #{alipayid,jdbcType=VARCHAR},
+      payCoin = #{paycoin,jdbcType=DOUBLE},
+      rejReason = #{rejreason,jdbcType=VARCHAR},
+      checkPrice = #{checkprice,jdbcType=DOUBLE},
+      bankAccount = #{bankaccount,jdbcType=VARCHAR},
+      bankNum = #{banknum,jdbcType=VARCHAR},
+      bank = #{bank,jdbcType=VARCHAR},
+      head = #{head,jdbcType=VARCHAR},
+      alertset = #{alertset,jdbcType=VARCHAR},
+      pwdRequest2 = #{pwdrequest2,jdbcType=VARCHAR},
+      pwdAnswer2 = #{pwdanswer2,jdbcType=VARCHAR},
+      accountUid = #{accountuid,jdbcType=VARCHAR},
+      checktimes = #{checktimes,jdbcType=INTEGER},
+      authority = #{authority,jdbcType=INTEGER},
+      totalUpload = #{totalupload,jdbcType=DOUBLE},
+      version = #{version,jdbcType=INTEGER},
+      year = #{year,jdbcType=INTEGER},
+      month = #{month,jdbcType=INTEGER},
+      day = #{day,jdbcType=INTEGER},
+      week = #{week,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

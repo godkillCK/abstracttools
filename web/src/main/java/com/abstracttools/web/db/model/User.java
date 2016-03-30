@@ -1,4 +1,4 @@
-package com.abstracttools.web.model;
+package com.abstracttools.web.db.model;
 
 public class User {
     private Integer id;
