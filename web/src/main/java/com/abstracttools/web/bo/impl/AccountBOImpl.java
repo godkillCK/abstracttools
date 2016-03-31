@@ -1,5 +1,7 @@
 package com.abstracttools.web.bo.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -13,9 +15,12 @@ import com.abstracttools.web.db.service.AccountService;
 public class AccountBOImpl implements AccountBO {
     @Autowired
     private AccountService accountService;
+    
+    private static Logger log = LoggerFactory.getLogger(AccountBOImpl.class);
 
     @Override
     public Account getAccount(Integer id) {
+        log.debug("accountId: ", id);
         //业务处理
         return accountService.getAccountById(id);
     }
