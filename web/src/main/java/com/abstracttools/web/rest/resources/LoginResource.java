@@ -14,10 +14,9 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import com.abstracttools.web.bo.impl.AccountBOImpl;
-
-import weibo4j.Oauth;
-import weibo4j.model.WeiboException;
-import weibo4j.util.BareBonesBrowserLaunch;
+import com.abstracttools.web.weibo4j.Oauth;
+import com.abstracttools.web.weibo4j.model.WeiboException;
+import com.abstracttools.web.weibo4j.util.BareBonesBrowserLaunch;
 
 @Controller
 @Scope("prototype")

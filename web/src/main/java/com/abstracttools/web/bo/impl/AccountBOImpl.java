@@ -16,7 +16,7 @@ public class AccountBOImpl implements AccountBO {
     @Autowired
     private AccountService accountService;
     
-    private static Logger log = LoggerFactory.getLogger(AccountBOImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(AccountBOImpl.class);
 
     @Override
     public Account getAccount(Integer id) {
