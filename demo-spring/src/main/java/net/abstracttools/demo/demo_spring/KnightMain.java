@@ -10,5 +10,9 @@ public class KnightMain
         ApplicationContext context = new ClassPathXmlApplicationContext("knights.xml");
         Knight knight = (Knight)context.getBean("knight");
         knight.embarkOnQuest();
+        /*AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(KnightConfig.class);
+        Knight knight = (Knight)context.getBean("knight");
+        knight.embarkOnQuest();
+        context.close();*/
     }
 }

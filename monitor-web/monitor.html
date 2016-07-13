@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="plugin/justgage/raphael-2.1.4.min.js"></script>
+    <script src="plugin/justgage/justgage.js"></script>
+</head>
+<body>
+    <div style="float:left; width:30%; height:500px;">
+        <div id="gauge" style="width:400px; height:320px"></div>
+    </div>
+    <div style="float:left; width:70%; height:500px;color:#f9c802;">
+        <svg width="1000" height="500">
+            <rect x="0" y="150" width="1000" height="60" fill="rgba(0, 0, 0, 0)"></rect>
+            <g>
+                <rect x="0" y="150" width="500" height="58" stroke="#EFEFEF" stroke-width="1" fill="#56bc76" rx="0" ry="0"></rect>
+                <rect x="500" y="150" width="500" height="58" stroke="#EFEFEF" stroke-width="1" fill="#fff" rx="0" ry="0"></rect>
+            </g>
+        </svg>
+    </div>
+
+
+</body>
+<script>
+    var g = new JustGage({
+        id: "gauge",
+        value: 55,
+        min: 0,
+        max: 100,
+        title: "CPU"
+    });
+</script>
+</html>

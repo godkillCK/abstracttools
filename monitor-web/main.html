@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Title</title>
+
+    <script src="js/3rd/jquery-1.11.1.min.js"></script>
+    <script src="js/3rd/bootstrap.min.js"></script>
+
+    <script src="plugin/sco/js/sco.message.js" charset="UTF-8"></script>
+    <script src="plugin/sco/js/sco.modal.js" charset="UTF-8"></script>
+    <link href="plugin/sco/css/sco.message.css" rel="stylesheet">
+
+    <script src="plugin/justgage/raphael-2.1.4.min.js"></script>
+    <script src="plugin/justgage/justgage.js"></script>
+
+    <script src="plugin/progressbar/progressbar.min.js"></script>
+
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/styles.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+
+    <!--[if lt IE 9]>
+    <script src="js/3rd/html5shiv.js"></script>
+    <script src="js/3rd/respond.min.js"></script>
+    <![endif]-->
+
+    <style>
+        .headroom {
+            transition: transform 200ms linear;
+        }
+        .headroom--pinned {
+            transform: translateY(0%);
+        }
+        .headroom--unpinned {
+            transform: translateY(-100%);
+        }
+        .border {
+            border: 1px #2aabd2 solid;
+        }
+        .widget-normal {
+            background-color: rgba(51,51,51,.4);
+            border-radius: 3px;
+            background-clip: padding-box;
+            padding: 10px 15px 15px;
+        }
+        .widget-content {
+            position: relative;
+        }
+        .repository {
+            width: 200px;
+            height: 100px;
+            background-color: #4d9dd7;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">导航菜单</a>
+            <ul class="user-menu">
+                <li class="dropdown pull-right">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> 用户 <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="#" onclick=""><span class="glyphicon glyphicon-log-out"></span> 退出</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div><!-- /.container-fluid -->
+</nav>
+<div class="container-fluid">
+    <div class="row" style="margin-top: 20px;">
+        <!--<div class="col-lg-5">
+            <div id="gauge" style="height:320px"></div>
+        </div>
+        <div class="col-lg-7">
+            <svg width="100%" height="320">
+                <rect x="0" y="150" width="100%" height="60" fill="rgba(0, 0, 0, 0)"></rect>
+                <g>
+                    <rect x="0" y="150" width="50%" height="58" stroke="#EFEFEF" stroke-width="1" fill="#56bc76" rx="0" ry="0"></rect>
+                    <rect x="50%" y="150" width="50%" height="58" stroke="#EFEFEF" stroke-width="1" fill="#fff" rx="0" ry="0"></rect>
+                </g>
+            </svg>
+        </div>-->
+
+        <div class="col-lg-5">
+            <div class="panel panel-blank">
+                <div class="panel-heading">CPU</div>
+                <div class="panel-body">
+                    <div id="cpu-gage" style="width: 100%;height: 200px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-7">
+            <div class="panel panel-blank">
+                <div class="panel-heading">MEMORY</div>
+                <div class="panel-body">
+                    <div id="memory-gage" style="width: 100%;height: 200px;padding-top: 50px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-blank">
+                <div class="panel-heading">REPOSITORIES</div>
+                <div class="panel-body">
+                    <div class="repository">6月</div>
+                    <div class="repository">6月</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="plugin/headroom/headroom.min.js"></script>
+<script src="plugin/headroom/jQuery.headroom.js"></script>
+<script>
+    $(".navbar").headroom();
+    /*var g = new JustGage({
+        id: "gauge",
+        value: 55,
+        min: 0,
+        max: 100,
+        title: "CPU"
+    });*/
+    var memory_bar = new ProgressBar.Line('#memory-gage', {
+        strokeWidth: 4,
+        color: '#FFEA82',
+        easing: 'easeInOut',
+        trailWidth: 4,
+        trailColor: '#eee',
+        duration: 1400,
+        svgStyle: {width: '100%', height: '60'},
+        text: {
+            value: '',
+            style: {
+                position: 'absolute',
+                left: '50%',
+                top: '90%',
+                padding: 0,
+                margin: 0,
+                fontFamily: '"Raleway", Helvetica, sans-serif',
+                fontSize: '2rem',
+                // You can specify styles which will be browser prefixed
+                transform: {
+                    prefix: true,
+                    value: 'translate(-50%, -50%)'
+                }
+            },
+        },
+        from: {color: '#FFEA82'},
+        to: {color: '#ED6A5A'},
+        step: function(state, bar, attachment) {
+            bar.path.setAttribute('stroke', state.color);
+            var value = Math.round(bar.value() * 100);
+            if (value === 0) {
+                bar.setText('');
+            } else {
+                bar.setText(value);
+            }
+
+            bar.text.style.color = state.color;
+        }
+    });
+
+    memory_bar.animate(0.2);  // Number from 0.0 to 1.0
+    setTimeout((function(){memory_bar.animate(0.2)}), 1000);
+    setTimeout((function(){memory_bar.animate(0.3)}), 4000);
+    setTimeout((function(){memory_bar.animate(0.5)}), 6000);
+    setTimeout((function(){memory_bar.animate(0.7)}), 8000);
+
+    var cpu_bar = new ProgressBar.SemiCircle('#cpu-gage', {
+        strokeWidth: 16,
+        color: '#FFEA82',
+        easing: 'easeInOut',
+        trailWidth: 16,
+        trailColor: '#eee',
+        duration: 1400,
+        svgStyle: {width: '100%', height: '200'},
+        text: {
+            value: '',
+            style: {
+                position: 'absolute',
+                left: '50%',
+                top: '50%',
+                padding: 0,
+                margin: 0,
+                fontFamily: '"Raleway", Helvetica, sans-serif',
+                fontSize: '2rem',
+                // You can specify styles which will be browser prefixed
+                transform: {
+                    prefix: true,
+                    value: 'translate(-50%, -50%)'
+                }
+            },
+        },
+        from: {color: '#FFEA82'},
+        to: {color: '#ED6A5A'},
+        step: function(state, bar, attachment) {
+            bar.path.setAttribute('stroke', state.color);
+            var value = Math.round(bar.value() * 100);
+            if (value === 0) {
+                bar.setText('');
+            } else {
+                bar.setText(value);
+            }
+
+            bar.text.style.color = state.color;
+        }
+    });
+
+    cpu_bar.animate(0.5);  // Number from 0.0 to 1.0
+    setTimeout((function(){cpu_bar.animate(0.5)}), 1000);
+    setTimeout((function(){cpu_bar.animate(0.8)}), 4000);
+    setTimeout((function(){cpu_bar.animate(0.6)}), 6000);
+    setTimeout((function(){cpu_bar.animate(0.2)}), 8000);
+
+</script>
+</body>
+</html>

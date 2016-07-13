@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <script type="text/javascript" src="./js/3rd/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="./js/3rd/highcharts.js"></script>
+</head>
+<body>
+
+<div id="container" style="margin: 0 auto"></div>
+<script>
+    $(function () {
+
+        // Create the chart
+        $('#container').highcharts({
+            chart: {
+                type: 'column'
+                // type: 'line'
+            },
+            title: {
+                text: '当季新品总收入（元）-- 点击钻取'
+            },
+            xAxis: {
+                type: 'category'
+            },
+
+            legend: {
+                enabled: false
+            },
+
+            plotOptions: {
+                series: {
+                    borderWidth: 0,
+                    dataLabels: {
+                        enabled: true
+                    }
+                }
+            },
+
+            xAxis: {
+                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+            },
+
+            series: [ {
+                name: '测试2',
+                type: 'line',
+                data: [
+                    {y:3.9,drilldown: 'animals'},
+                    {y:4.9,drilldown: 'animals'},],
+                drilldown: 'fruits'
+            }],
+
+            /*
+             series: [{
+             name: 'Things',
+             colorByPoint: true,
+             data: [{
+             name: 'Animals',
+             y: 5,
+             drilldown: 'animals'
+             }, {
+             name: 'Fruits',
+             y: 2,
+             drilldown: 'fruits'
+             }, {
+             name: 'Cars',
+             y: 4,
+             drilldown: 'cars'
+             }]
+             }],
+             */
+
+            drilldown: {
+                series: [{
+                    id: 'animals',
+                    data: [{
+                        name: 'Animals2',
+                        y: 5,
+                        drilldown: 'cars'
+                    }, {
+                        name: 'Fruits2',
+                        y: 2,
+                        drilldown: 'cars'
+                    }]
+                }, {
+                    id: 'fruits',
+                    data: [
+                        ['Apples', 4],
+                        ['Oranges', 2]
+                    ],
+                    drilldown: 'cars'
+                }, {
+                    id: 'cars',
+                    data: [
+                        ['Toyota', 4],
+                        ['Opel', 2],
+                        ['Volkswagen', 2]
+                    ]
+                }]
+            }
+        });
+    });
+
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Title</title>
+    <script src="js/3rd/jquery-1.11.1.min.js"></script>
+    <script src="js/3rd/bootstrap.min.js"></script>
+    <script src="js/3rd/highcharts.js"></script>
+    <script src="js/3rd/dark-unica.js"></script>
+    <script src="js/3rd/drilldown.js"></script>
+    <script src="plugin/headroom/headroom.min.js"></script>
+    <script src="plugin/headroom/jQuery.headroom.js"></script>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/styles.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <style type="text/css">
+        body {
+            background-color: rgba(45,101,203,.89);
+            background-image: radial-gradient(farthest-side ellipse at 10% 0,rgba(119,157,207,.8) 30%,rgba(174,180,186,.8) 76%,rgba(199,175,156,.8));
+            background-image: -webkit-radial-gradient(10% 0,farthest-side ellipse,rgba(119,157,207,.8) 30%,rgba(174,180,186,.8) 76%,rgba(199,175,156,.8));
+            background-image: -moz-radial-gradient(10% 0,farthest-side ellipse,rgba(119,157,207,.8) 30%,rgba(174,180,186,.8) 76%,rgba(199,175,156,.8));
+            background-attachment: fixed,fixed;
+            color: #F8F8F8;
+            overflow-y: scroll;
+        }
+        .headroom {
+            transition: transform 200ms linear;
+        }
+        .headroom--pinned {
+            transform: translateY(0%);
+        }
+        .headroom--unpinned {
+            transform: translateY(-100%);
+        }
+        .sidebar-self {
+            float: left;
+            background-color: rgba(0,0,0,0);;
+            margin-left: 30px;
+            width: 150px;
+            height: 600px;
+            margin-top: 40px;
+        }
+        .menu {
+            color: #fff;
+        }
+        .menu ul {
+            margin-left: -10px;
+        }
+        .menu li {
+            list-style: none;
+            fontFamily: "'Microsoft YaHei', sans-serif";
+            font-size: 20px;
+        }
+        .menu li a {
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top" style="background: rgba(0,0,0,0.5);" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="javascript:send()">导航菜单</a>
+            <ul class="user-menu">
+                <li class="dropdown pull-right">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> 用户 <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="#" onclick=""><span class="glyphicon glyphicon-log-out"></span> 退出</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container-fluid">
+
+    <div class="sidebar-self">
+        <div class="menu">
+            <ul>
+                <li>
+                    <strong>
+                        <a class="" href="#">
+                            <i class="iconfont icon-side"></i>
+                            总览
+                        </a>
+                    </strong>
+
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div style="margin-top: 40px;margin-left: 200px;">
+        <div class="col-lg-6">
+            <div id="os-div" style="width:100%;height:400px"></div>
+        </div>
+        <div class="col-lg-6">
+            <div id="memory-div" style="width:100%;height:400px"></div>
+        </div>
+    </div>
+
+    <div style="margin-top: 480px;margin-left: 200px;">
+        <div class="col-lg-6">
+            <div id="thread-div" style="width:100%;height:400px"></div>
+        </div>
+        <div class="col-lg-6">
+            <div id="null-div" style="width:100%;height:400px"></div>
+        </div>
+    </div>
+
+    <div style="margin-top: 920px;margin-left: 200px;">
+        <div class="col-lg-12">
+            <div id="repository-div" style="width:100%;min-height:400px"></div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div style="height: 200px;"></div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade bs-example-modal-lg" id="myModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="query-title"></h4>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="" style="width: 50%">
+                        <span type="width: 15px;"></span>
+                        <input type="text" class="form-control" placeholder="" style="width: 50%">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button">查询</button>
+                        </span>
+                    </div>
+                </div>
+                <div style="height: 600px;"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<script>
+
+    $(".navbar").headroom();
+
+    window.repositoryHistory = {};
+    window.drilldownSeries = {};
+
+    $(function(){
+        Highcharts.setOptions({
+            global: {
+                useUTC: false
+            }
+        });
+        //initCpuGrid();
+        initOsGrid();
+        initMemoryGrid();
+        initThreadGrid();
+        rfreshData();
+    });
+
+    function initCpuGrid() {
+
+        $('#cpu-div').highcharts({
+            chart: {
+                type: 'area',
+                animation: Highcharts.svg, // don't animate in old IE
+                marginRight: 10
+            },
+            title: {
+                text: 'CPU使用情况'
+            },
+            xAxis: {
+                type: 'datetime',
+                tickPixelInterval: 150
+            },
+            yAxis: {
+                title: {
+                    text: ''
+                }
+                /*max: 1.2,
+                tickInterval: 0.2*/
+            },
+            tooltip: {
+                formatter: function () {
+                    return '<b>' + this.series.name + '</b><br/>' +
+                            Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) + '<br/>' +
+                            Highcharts.numberFormat(this.y, 2);
+                }
+            },
+            legend: {
+                enabled: false
+            },
+            exporting: {
+                enabled: false
+            },
+            series: [{
+                name: 'Random data',
+                data: []
+            }]
+        });
+    }
+
+    function initOsGrid() {
+
+        $('#os-div').highcharts({
+            chart: {
+                type: 'area',
+                animation: Highcharts.svg, // don't animate in old IE
+                marginRight: 10
+            },
+            title: {
+                text: '系统内存'
+            },
+            /*subtitle: {
+                text: '<table width="100%"><tr><td width="50%"><label>初始容量：</label></td><td width="50%"><label>已使用：</label></td></tr><tr><td><label>最大：</label></td><td></td></tr></table>',
+                useHTML: true,
+                style: {
+                    color: '#FFF'
+                }
+            },*/
+            xAxis: {
+                type: 'datetime'
+            },
+            yAxis: {
+                title: {
+                    text: ''
+                },
+                labels: {
+                    formatter: function() {
+                        return this.value +'G';
+                    }
+                }
+            },
+            tooltip: {
+                shared: true,
+                /*formatter: function () {
+                 return '<b>' + this.series.name + '</b><br/>' +
+                 Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) + '<br/>' +
+                 Highcharts.numberFormat(this.y, 2);
+                 }*/
+                xDateFormat: '%H:%M:%S',
+                pointFormat: '{series.name}: <b>{point.y}</b><br/>',
+                valueDecimals: 2,
+                valueSuffix: 'M'
+            },
+            plotOptions: {
+                area: {
+                    lineWidth: 0,
+                    marker: {
+                        enabled: false,
+                        lineWidth: 0
+                    }
+                }
+            },
+            legend: {
+                enabled: false
+            },
+            exporting: {
+                enabled: false
+            },
+            series: [{
+                name: 'os_use_memory',
+                data: []
+            }]
+        });
+    }
+
+    function initMemoryGrid() {
+
+        $('#memory-div').highcharts({
+            chart: {
+                type: 'area',
+                animation: Highcharts.svg, // don't animate in old IE
+                marginRight: 10
+            },
+            title: {
+                text: '程序内存'
+            },
+            subtitle: {
+                text: '<table width="100%"><tr><td width="50%"><label>初始容量：</label></td><td width="50%"><label>已使用：</label></td></tr><tr><td><label>最大：</label></td><td></td></tr></table>',
+                useHTML: true,
+                style: {
+                    color: '#FFF'
+                }
+            },
+            xAxis: {
+                type: 'datetime'
+            },
+            yAxis: {
+                title: {
+                    text: ''
+                },
+                labels: {
+                    formatter: function() {
+                        return this.value +'M';
+                    }
+                }
+                /*max: 120,
+                tickInterval: 20*/
+            },
+            tooltip: {
+                shared: true,
+                /*formatter: function () {
+                    return '<b>' + this.series.name + '</b><br/>' +
+                            Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) + '<br/>' +
+                            Highcharts.numberFormat(this.y, 2);
+                }*/
+                xDateFormat: '%H:%M:%S',
+                pointFormat: '{series.name}: <b>{point.y}</b><br/>',
+                valueDecimals: 2,
+                valueSuffix: 'M'
+            },
+            plotOptions: {
+                area: {
+                    lineWidth: 0,
+                    marker: {
+                        enabled: false,
+                        lineWidth: 0
+                    }
+                }
+            },
+            legend: {
+                enabled: false
+            },
+            exporting: {
+                enabled: false
+            },
+            series: [{
+                name: 'heap_init',
+                data: []
+            },{
+                name: 'heap_use',
+                data: []
+            }]
+        });
+    }
+
+    function initThreadGrid() {
+
+        $('#thread-div').highcharts({
+            chart: {
+                type: 'area',
+                animation: Highcharts.svg, // don't animate in old IE
+                marginRight: 10
+            },
+            title: {
+                text: '线程'
+            },
+            subtitle: {
+                text: '<table width="100%"><tr><td width="50%"><label>初始容量：</label></td><td width="50%"><label>已使用：</label></td></tr><tr><td><label>最大：</label></td><td></td></tr></table>',
+                useHTML: true,
+                style: {
+                    color: '#FFF'
+                }
+            },
+            xAxis: {
+                type: 'datetime'
+            },
+            yAxis: {
+                title: {
+                    text: ''
+                }
+                /*max: 120,
+                 tickInterval: 20*/
+            },
+            tooltip: {
+                shared: true,
+                /*formatter: function () {
+                 return '<b>' + this.series.name + '</b><br/>' +
+                 Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) + '<br/>' +
+                 Highcharts.numberFormat(this.y, 2);
+                 }*/
+                xDateFormat: '%H:%M:%S',
+                pointFormat: '{series.name}: <b>{point.y}</b><br/>',
+                valueDecimals: 0
+            },
+            plotOptions: {
+                area: {
+                    lineWidth: 0,
+                    marker: {
+                        enabled: false,
+                        lineWidth: 0
+                    }
+                }
+            },
+            legend: {
+                enabled: false
+            },
+            exporting: {
+                enabled: false
+            },
+            series: [{
+                name: 'activity_thread_num',
+                data: []
+            },{
+                name: 'guard_thread_num',
+                data: []
+            }]
+        });
+    }
+
+    function rfreshData() {
+        var websocket = null;
+        var timer = null;
+
+        //判断当前浏览器是否支持WebSocket
+        if('WebSocket' in window){
+            websocket = new WebSocket("ws://localhost:1890");
+            //websocket = new WebSocket("ws://192.168.4.2:8080/websocket/websocket");
+        }
+        else{
+            alert('Not support websocket')
+        }
+
+        //连接发生错误的回调方法
+        websocket.onerror = function(){
+            console.log("error");
+        };
+
+        //连接成功建立的回调方法
+        websocket.onopen = function(event){
+            console.log("open");
+            timer =  window.setInterval(function() {
+                websocket.send('|30{"context":{},"operateCode":7}');
+            }, 1000);
+            websocket.send('|30{"context":{},"operateCode":5}');
+        }
+
+        //接收到消息的回调方法
+        websocket.onmessage = function(event){
+            var data = event.data;
+            console.log('receive: ' + event.data);
+            var x = (new Date()).getTime();
+
+            data = JSON.parse(data);
+            if (data.connectToken == "7") {
+                var heap_init = parseFloat(parseInt(data.context["heap_init"])/1024/1024);
+                var heap_use = parseFloat(parseInt(data.context["heap_use"])/1024/1024);
+                var heap_max = parseFloat(parseInt(data.context["heap_max"])/1024/1024);
+
+                var max_thread_num = parseInt(data.context["max_thread_num"]);
+                var activity_thread_num = parseInt(data.context["activity_thread_num"]);
+                var start_thread_num = parseInt(data.context["start_thread_num"]);
+                var guard_thread_num = parseInt(data.context["guard_thread_num"]);
+
+                var os_memory = parseInt(data.context["os_memory"]) / 1024;
+                var os_use_memory = parseFloat(parseInt(data.context["os_use_memory"]) / 1024);
+                var os_residue_memory = parseInt(data.context["os_residue_memory"]);
+
+                var osChart = $('#os-div').highcharts();
+                osChart.series[0].addPoint([x, os_use_memory], false, false);
+                osChart.series[0].yAxis.setExtremes(0, os_memory); //设置最小值，最大值
+
+                var memChart = $('#memory-div').highcharts();
+                memChart.series[0].addPoint([x, heap_init], false, false);
+                memChart.series[1].addPoint([x, heap_use], false, false);
+                memChart.series[0].yAxis.setExtremes(0, heap_init+50); //设置最小值，最大值
+
+                var threadChart = $('#thread-div').highcharts();
+                threadChart.series[0].addPoint([x, activity_thread_num], false, false);
+                threadChart.series[1].addPoint([x, guard_thread_num], false, false);
+                threadChart.series[0].yAxis.setExtremes(0, start_thread_num); //设置最小值，最大值
+            } else if (data.connectToken == "5") {
+                data = eval(data.context["data"]);
+                var xCategories = [];
+                var yData = [];
+                var tmp = {};
+                for (i in data) {
+                    xCategories.push(data[i].name);
+                    yData.push({
+                        name: data[i].name,
+                        y: 1,
+                        drilldown: true
+                    });
+                    tmp[data[i].name] = data[i];
+                }
+                var width = $('#repository-div').width();
+                var height = data.length * 70;
+
+                Highcharts.setOptions({
+                    lang: {
+                        drillUpText: '<< 返回资源库'
+                    }
+                });
+                $('#repository-div').highcharts({
+                    chart: {
+                        height: height,
+                        type: 'bar',
+                        events: {
+                            drillup: function(e) {
+                                this.setSize(width, height);
+                                this.setTitle({text: '资源库'});
+                            }
+                        }
+                    },
+                    loading: {
+                        labelStyle: {
+                            color: '#FFF'
+                        },
+                        style: {
+                            backgroundColor: 'rgba(0, 0, 0, 0)'
+                        }
+                    },
+                    title: {
+                        text: '资源库'
+                    },
+                    xAxis: {
+                        type: 'category',
+                        tickColor: 'rgba(0, 0, 0, 0)',
+                        lineColor: 'rgba(0, 0, 0, 0)',
+                        gridLineColor: 'rgba(0, 0, 0, 0)',
+                        tickPixelInterval: 100
+                    },
+                    yAxis: {
+                        gridLineColor: 'rgba(0, 0, 0, 0)',
+                        min: 0,
+                        max: 10,
+                        title: {
+                            text: ''
+                        },
+                        labels: {
+                            enabled: false
+                        }
+                    },
+                    tooltip: {
+                        formatter: function () {
+                            try {
+                                return '<b>' + 'name: ' + '</b>' + tmp[this.key].name + '<br/>'
+                                        + '<b>' + 'ip: ' + '</b>' + tmp[this.key].ip + '<br/>'
+                                        + '<b>' + 'indexPath: ' + '</b>' + tmp[this.key].indexPath + '<br/>'
+                                        + '<b>' + 'remark: ' + '</b>' + tmp[this.key].remark + '<br/>'
+                                        + '<b>' + 'volume: ' + '</b>' + tmp[this.key].volume + '<br/>';
+                            }catch(e) {
+                                return '111';
+                            }
+
+                        },
+                        crosshairs: {
+                            width: 0
+                        }
+                    },
+                    legend: {
+                        enabled: false,
+                        reversed: true
+                    },
+                    exporting: {
+                        enabled: false
+                    },
+                    plotOptions: {
+                        series: {
+                            stacking: 'normal',
+                            borderWidth: 0,
+                            borderRadius: 3,
+                            pointWidth: 50,
+                            cursor: 'pointer',
+                            point: {
+                                events: {
+                                    click: function(e) {
+                                        var options = $('#repository-div').highcharts().options;
+                                        if (options.title.text == '资源库') {
+                                            window.clickPoint = e.point;
+                                            var sendMsg = '{"context":{"repositoryName":"' + e.point.name + '"},"operateCode":11}';
+                                            sendMsg = '|' + sendMsg.length + sendMsg;
+                                            websocket.send(sendMsg);
+                                            $('#repository-div').highcharts().showLoading('loading...');
+                                        } else {
+                                            var sendMsg = '{"context":{"repositoryName":"' + options.title.text + '","historyMonth":"' + e.point.name + '"},"operateCode":8}';
+                                            var closeHistoryQueryMsg = '{"context":{"repositoryName":"' + options.title.text + '","historyMonth":"' + e.point.name + '"},"operateCode":9}';
+                                            sendMsg = '|' + sendMsg.length + sendMsg;
+                                            websocket.send(sendMsg);
+                                            $('#query-title').text(options.title.text + '(' + e.point.name + ')');
+                                            $('#myModal').modal('show');
+                                            $('#myModal').on('hidden.bs.modal', function (e) {
+                                                websocket.send('|' + closeHistoryQueryMsg.length + closeHistoryQueryMsg);
+                                            })
+                                            return;
+                                        }
+
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    series: [{
+                        name: 'repository',
+                        colorByPoint: true,
+                        data: yData
+                    }],
+                    drilldown: {
+                        drillUpButton: {
+                            relativeTo: 'spacingBox',
+                            position: {
+                                y: 0,
+                                x: -100
+                            },
+                            theme: {
+                                fill: 'rgba(0, 0, 0, 0.5)',
+                                'stroke-width': 0,
+                                stroke: 'silver',
+                                r: 6,
+                                states: {
+                                    hover: {
+                                        fill: 'rgba(0, 0, 0, 0.5)'
+                                    },
+                                    select: {
+                                        stroke: '#039',
+                                        fill: 'rgba(0, 0, 0, 0.5)'
+                                    }
+                                }
+                            }
+
+                        },
+                        activeAxisLabelStyle: {
+                            cursor: 'pointer',
+                            color: '#FFF',
+                            fontWeight: 'bold',
+                            textDecoration: 'none'
+                        },
+                        animation: {
+                            duration: 300
+                        },
+                        series: []
+                    }
+                });
+            } else if (data.connectToken == "11") {
+                var chart = $('#repository-div').highcharts();
+                var name = data.context["name"];
+                var hisData = data.context["history"];
+                if (hisData == undefined || hisData == null || hisData.length == 0) {
+                    alert('无历史数据');
+                    chart.hideLoading();
+                    return;
+                }
+
+                var tmp = [];
+                for (i in hisData) {
+                    tmp.push([hisData[i],1])
+                }
+                if (window.drilldownSeries[name] == undefined || window.drilldownSeries[name] == null) {
+                    window.drilldownSeries[name] = {
+                        name: name,
+                        data: tmp
+                    };
+                }
+
+                chart.hideLoading();
+                chart.addSeriesAsDrilldown(window.clickPoint, window.drilldownSeries[name]);
+                chart.setTitle({text: name});
+                chart.setSize($('#repository-div').width(), window.drilldownSeries[name].data.length * 100);
+                //chart.setSize(width, window.drilldownSeries[name].data.length * 100);
+
+                console.log(window.repositoryHistory);
+            }
+
+        }
+
+        //连接关闭的回调方法
+        websocket.onclose = function(){
+            console.log("close");
+            clearInterval(timer);
+            rfreshData();
+        }
+
+        //监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。
+        window.onbeforeunload = function(){
+            websocket.close();
+        }
+    }
+
+</script>
+</body>
+</html>

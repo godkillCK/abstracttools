@@ -17,4 +17,18 @@
      </bean>
      
      <bean id="quest" class="net.abstracttools.demo.demo_spring.SlayDragonQuest"></bean>
+     
+     <bean id="minstrel" class="net.abstracttools.demo.demo_spring.Minstrel">
+        <constructor-arg value="#{T(System).out}"></constructor-arg>
+     </bean>
+     
+     <aop:config>
+        <aop:aspect ref="minstrel">
+            <aop:pointcut expression="execution(* *.embarkOnQuest(..))" id="embark"/>
+            
+            <aop:before method="singBeforeQuest" pointcut-ref="embark"/>
+            
+            <aop:after method="singAfterQuest" pointcut-ref="embark"/>
+        </aop:aspect>
+     </aop:config>
 </beans>
